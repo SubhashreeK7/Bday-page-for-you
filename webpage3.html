@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:
+                radial-gradient(circle at top,
+                    #2f2f52,
+                    #161625 70%);
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gift-box {
+            position: relative;
+            width: 180px;
+            height: 180px;
+        }
+
+        .base {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+            background: #e4012b;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .lid {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 40%;
+            background: #b20121;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .ribbon-v {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: rgb(244, 224, 2);
+            transform: translateX(-50%);
+        }
+
+        .ribbon-h {
+            position: absolute;
+            top: 45%;
+            width: 100%;
+            height: 20px;
+            background: rgb(221, 152, 4);
+        }
+
+        .bow {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+        }
+
+        .bow::before,
+        .bow::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #f2e48c;
+            border-radius: 50%;
+        }
+
+        .bow::before {
+            left: 0;
+        }
+
+        .bow::after {
+            right: 0;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: 0.3s ease;
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .popup img {
+            width: 120px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        #confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .next-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: #333;
+            padding: 12px 22px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: sans-serif;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            z-index: 999;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .gift-text {
+            font-family: sans-serif;
+            color: #444;
+            margin-top: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="confetti"></canvas>
+    <div class="gift-box" onclick="openGift()">
+        <div class="lid"></div>
+        <div class="base"></div>
+        <div class="ribbon-v"></div>
+        <div class="ribbon-h"></div>
+        <div class="bow"></div>
+    </div>
+    <div class="popup" id="popup">
+        <p class="gift-text">
+            something you said you love..hehe🌙
+        </p>
+        <img src="https://m.media-amazon.com/images/I/61VOnjGiCDL._AC_.jpg">
+    </div>
+    <script>
+
+        const canvas = document.getElementById("confetti");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let pieces = [];
+
+        function createConfetti() {
+            pieces = [];
+            for (let i = 0; i < 180; i++) {
+                pieces.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    w: Math.random() * 8 + 4,
+                    h: Math.random() * 8 + 4,
+                    color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    gravity: 0.01
+                });
+            }
+        }
+
+        function drawConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            pieces.forEach(p => {
+                p.vy += p.gravity;
+                p.x += p.vx;
+                p.y += p.vy;
+
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.w, p.h);
+            });
+
+            requestAnimationFrame(drawConfetti);
+        }
+
+        function openGift() {
+            document.getElementById("popup").classList.add("show");
+            createConfetti();
+            drawConfetti();
+        }
+    </script>
+    <a href="webpage5.html" class="next-btn">Final Letter 💌</a>
+</body>
+
+</html>
